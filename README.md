@@ -8,6 +8,7 @@
 A primera vista, la rotación de empleados en ABC Corporation no representa una señal de alarma. Sin embargo, las métricas globales no siempre reflejan lo que ocurre dentro de cada área de la empresa. Recursos Humanos detectó indicios de que la salida de empleados podría estar concentrándose en determinados puestos críticos, generando un impacto desproporcionado sobre la operación.
 
 Este análisis nace para identificar dónde se produce realmente la fuga de talento, medir su magnitud y comprender qué variables están asociadas a ella. A través del análisis exploratorio de datos, el proyecto busca aportar una base objetiva para diseñar estrategias de retención más efectivas.
+
 ---
 
 ## 📁 Estructura del proyecto
