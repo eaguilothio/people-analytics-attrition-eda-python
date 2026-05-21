@@ -48,8 +48,8 @@ De todas las columnas disponibles, se seleccionaron **8 variables** con criterio
   - `jobsatisfaction`, `department`, `overtime` → moda (valor más frecuente)
 - **Validación de rangos:** verificación de que salarios, antigüedad y satisfacción tienen valores lógicos.
 
-### Análisis exploratorio
-El EDA se estructuró en dos grandes fases:
+### Análisis 
+El análisis se estructuró en dos grandes fases:
 
 **Fase 1 — Descripción base**
 Antes de buscar causas, era necesario entender quiénes son los empleados y cómo está organizada la empresa. Esta fase no cruza ninguna variable con `attrition` todavía — solo construye el mapa de la realidad organizativa: cómo se distribuye la plantilla por departamento y puesto, cuál es el perfil económico y laboral típico (salario mediano, antigüedad, satisfacción), y cuál es la tasa global de rotación. Este último dato es el punto de partida del problema y la referencia contra la que se leerán todos los segmentos posteriores.
@@ -63,9 +63,6 @@ Esta fase se divide en tres bloques que se complementan:
 - **Factores categóricos (crosstabs):** se calcularon tablas de contingencia normalizadas por fila para obtener la tasa de fuga dentro de cada grupo. Primero la dimensión actitudinal — niveles de satisfacción laboral — y luego la estructural — departamento y puesto. Normalizar por fila es clave: permite comparar grupos de distinto tamaño en igualdad de condiciones, sin que un departamento grande distorsione los porcentajes.
 
 - **Cruce departamento/puesto × horas extra:** el heatmap señaló `overtime` como el factor numérico con mayor asociación con `attrition`. Este tercer bloque investiga si ese desgaste se concentra precisamente en los segmentos que ya identificamos como críticos, o si es un problema transversal. El cruce confirma que `sales` acumula tanto la mayor tasa de fuga como el mayor porcentaje de empleados con horas extra — lo que apunta a una causa estructural, no aleatoria.
-
-### Por qué mediana y no media
-Las variables `monthlyincome` y `yearsatcompany` tienen outliers que distorsionarían la media. Se usa la mediana como estadístico central para describir el empleado típico.
 
 ---
 
