@@ -1,79 +1,138 @@
-# 📊 People Analytics — Análisis de Rotación de Talento
-**ABC Corporation · EDA Project · Python**
+# People Analytics — Análisis de Rotación de Talento
+¿Qué factores explican que un empleado abandone la empresa?
 
 ---
 
-## 🧠 Contexto
+## ¿Cuál era el problema de negocio?
 
-A primera vista, la rotación de empleados en ABC Corporation no representa una señal de alarma. Sin embargo, las métricas globales no siempre reflejan lo que ocurre dentro de cada área de la empresa. Recursos Humanos detectó indicios de que la salida de empleados podría estar concentrándose en determinados puestos críticos, generando un impacto desproporcionado sobre la operación.
+El área de Recursos Humanos de ABC Corporation había identificado un patrón en los registros históricos: la rotación no afectaba de forma homogénea a toda la organización.
 
-Este análisis nace para identificar dónde se produce realmente la fuga de talento, medir su magnitud y comprender qué variables están asociadas a ella. A través del análisis exploratorio de datos, el proyecto busca aportar una base objetiva para diseñar estrategias de retención más efectivas.
----
+Los datos apuntaban a que la fuga se concentraba en determinados departamentos, con impacto directo en la estabilidad de los equipos y en la relación con los clientes.
 
-## 📁 Estructura del proyecto
-
-```
-├── EDA_attrition_ABC_Corp.ipynb   # Notebook principal
-├── datasets/
-│   └── ABC_Corp.csv               # Dataset de empleados
-└── README.md
-```
+El análisis se estructuró en torno a una pregunta central: **¿qué factores explican que un empleado abandone la empresa?**
 
 ---
 
-## 🗂️ Variables analizadas
+## ¿Qué datos usé y de dónde salieron?
 
-| Variable | Pregunta de negocio |
+Dataset público de Kaggle — [IBM HR Analytics Employee Attrition & Performance](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset).
+
+**1.470 empleados · 35 variables originales**
+
+De las 35 variables originales se seleccionaron 8, organizadas en tres dimensiones:
+
+| Dimensión | Variables |
 |---|---|
-| `department`, `jobrole` | ¿Dónde se concentra el problema? |
-| `monthlyincome` | ¿El salario influye en la decisión de irse? |
-| `yearsatcompany` | ¿Los empleados más nuevos son más vulnerables? |
-| `jobsatisfaction` | ¿La satisfacción laboral protege contra la fuga? |
-| `overtime` | ¿Las horas extra empujan a la salida? |
-| `attrition` | Variable objetivo — ¿quién se fue? |
+| Estructura organizativa | `department` `jobrole` |
+| Condiciones laborales | `overtime` `monthlyincome` `jobsatisfaction` |
+| Ciclo de vida | `yearsatcompany` |
+| Objetivo | `attrition` |
 
 ---
 
-## ⚙️ Decisiones técnicas
+## ¿Qué herramienta usé y por qué?
 
-### Selección de variables
-De todas las columnas disponibles, se seleccionaron **8 variables** con criterio de negocio: cada una responde a una pregunta concreta de RRHH, evitando incluir variables sin interpretabilidad práctica.
+**Python**, ejecutado en un Jupyter Notebook.
 
-### Limpieza de datos
-- **Estandarización:** columnas y valores convertidos a `snake_case` para evitar errores por mayúsculas o espacios.
-- **Duplicados:** eliminados por `employeenumber` (ID único del empleado), conservando el primer registro.
-- **Nulos:** imputación diferenciada por tipo de variable:
-  - `monthlyincome` → mediana por `jobrole` (respeta diferencias salariales entre puestos)
-  - `jobsatisfaction`, `department`, `overtime` → moda (valor más frecuente)
-- **Validación de rangos:** verificación de que salarios, antigüedad y satisfacción tienen valores lógicos.
-
-### Análisis exploratorio
-El EDA se estructuró en dos grandes fases:
-
-**Fase 1 — Descripción base**
-Antes de buscar causas, era necesario entender quiénes son los empleados y cómo está organizada la empresa. Esta fase no cruza ninguna variable con `attrition` todavía — solo construye el mapa de la realidad organizativa: cómo se distribuye la plantilla por departamento y puesto, cuál es el perfil económico y laboral típico (salario mediano, antigüedad, satisfacción), y cuál es la tasa global de rotación. Este último dato es el punto de partida del problema y la referencia contra la que se leerán todos los segmentos posteriores.
-
-**Fase 2 — Determinar qué factores se asocian con la fuga**
-
-Esta fase se divide en tres bloques que se complementan:
-
-- **Factores numéricos (heatmap de correlación):** se codificó `attrition` y `overtime` como variables binarias (0/1) y se calculó la correlación de Pearson de cada variable numérica con `attrition`. El heatmap permite ver de un vistazo la dirección (positiva o negativa) e intensidad de cada relación. Esto establece una jerarquía de variables: cuáles merecen investigación y cuáles son básicamente ruido.
-
-- **Factores categóricos (crosstabs):** se calcularon tablas de contingencia normalizadas por fila para obtener la tasa de fuga dentro de cada grupo. Primero la dimensión actitudinal — niveles de satisfacción laboral — y luego la estructural — departamento y puesto. Normalizar por fila es clave: permite comparar grupos de distinto tamaño en igualdad de condiciones, sin que un departamento grande distorsione los porcentajes.
-
-- **Cruce departamento/puesto × horas extra:** el heatmap señaló `overtime` como el factor numérico con mayor asociación con `attrition`. Este tercer bloque investiga si ese desgaste se concentra precisamente en los segmentos que ya identificamos como críticos, o si es un problema transversal. El cruce confirma que `sales` acumula tanto la mayor tasa de fuga como el mayor porcentaje de empleados con horas extra — lo que apunta a una causa estructural, no aleatoria.
-
-### Por qué mediana y no media
-Las variables `monthlyincome` y `yearsatcompany` tienen outliers que distorsionarían la media. Se usa la mediana como estadístico central para describir el empleado típico.
+- Permite automatizar el procesamiento y análisis de grandes volúmenes de datos, superando las limitaciones de herramientas como Excel en rendimiento.
+- Facilita la exploración rápida de información y la generación de insights accionables, acelerando la toma de decisiones basada en datos.
 
 ---
 
-## 💡 Hallazgos principales
+## El proceso analítico de principio a fin
 
-- **Tasa global de attrition: 16.1%** — el número global oculta segmentos críticos.
-- **Departamento más vulnerable:** `sales` (20.3% de fuga).
-- **Puesto más vulnerable:** `sales_representative` (39.8% de fuga).
-- **Satisfacción:** empleados con nivel 1 tienen el doble de fuga que los de nivel 4 (22.6% vs 11.2%).
-- **Horas extra:** correlación de 0.25 con attrition; `sales` concentra tanto el mayor overtime (28.6%) como la mayor fuga.
+### BLOQUE 1 — Exploración y limpieza
 
+---
 
+#### Paso 1 — Selección de variables
+
+De las 35 variables originales se trabajó con 8. Menos variables bien justificadas generan más claridad que muchas variables mal elegidas.
+
+---
+
+#### Paso 2 — Estandarización
+
+Columnas y valores categóricos unificados a minúsculas sin espacios. Sin este paso, Python trataría `"Sales"`, `"sales"` y `"SALES"` como tres departamentos distintos.
+
+---
+
+#### Paso 3 — Duplicados
+
+Cada fila representa un empleado único. Se verificó que no existieran registros duplicados que pudieran inflar las tasas de rotación.
+
+---
+
+#### Paso 4 — Nulos
+
+- `monthlyincome` — se imputa con la mediana por `jobrole`, ya que el salario varía estructuralmente entre roles.
+- `jobsatisfaction`, `department`, `overtime` — porcentaje de nulos bajo (<5%). Se imputan con la moda para no perder registros.
+
+---
+
+### BLOQUE 2 — Análisis
+
+---
+
+#### Paso 5 — Tasa global de attrition
+
+Antes de buscar causas, hay que dimensionar el problema.
+
+Resultado: **16,1%** — ligeramente por encima del benchmark del sector tecnológico (~15%). Un porcentaje que no es de alarma, pero que puede ocultar concentraciones muy localizadas.
+
+---
+
+#### Paso 6 — Correlación con attrition
+
+Se analizó qué variables se asocian con la fuga y en qué dirección.
+
+`overtime` es la variable con mayor correlación positiva con `attrition`. Por el contrario, `jobsatisfaction`, `yearsatcompany` y `monthlyincome` muestran correlación negativa: a mayor satisfacción, antigüedad o salario, menor riesgo de fuga.
+
+---
+
+#### Paso 7 — Segmentación por departamento y rol
+
+Las tasas globales ocultan la distribución real del riesgo. El análisis por segmento revela dónde se concentra la fuga.
+
+---
+
+## Resultados
+
+- El departamento con mayor tasa de rotación es Sales (20.3%).
+- El rol más vulnerable es Sales Representative (39.8%).
+- Existe una relación positiva entre overtime y attrition, lo que sugiere que las horas extra podrían estar asociadas a mayor probabilidad de abandono.
+- Variables como job satisfaction, years at company y monthly income muestran una relación negativa con la fuga, aunque de intensidad débil.
+- La fuga suele ser un fenómeno multifactorial. Variables con menos relación con la variable de interés como salario, satisfacción o antigüedad no siempre explican la salida de forma individual, pero en conjunto pueden aumentar la probabilidad de que un empleado abandone la empresa.
+
+---
+
+## Acciones recomendadas
+
+1. No tomar decisiones basadas únicamente en la tasa global — el 16.1% de attrition general oculta segmentos donde la fuga es especialmente relevante.
+2. Revisar la política de horas extra en los departamentos críticos.
+
+    Introducir:
+    - compensación adicional clara
+    - redistribución de la carga de trabajo
+
+3. Los empleados con más años en la empresa o mayor ingreso presentan menor riesgo de fuga.
+
+    Valorar:
+    - ajustes salariales en departamentos críticos
+    - refuerzo de la supervisión y acompañamiento del equipo junior
+
+---
+
+## Limitaciones
+
+El dataset no incluye variable de fecha. Si los registros corresponden a períodos distintos, comparar la tasa global con un benchmark anual concreto sería metodológicamente incorrecto. Se asume que todos los registros pertenecen a un mismo período, pero no se puede verificar.
+
+---
+
+## Archivos del repositorio
+
+```
+dataset/ABC_Corp.csv       → dataset original
+ABC_Corp.ipynb             → notebook con el análisis completo
+README.md                  → documento del proceso
+```
