@@ -1,4 +1,4 @@
-# People Analytics — Análisis de Rotación de Talento
+# People Analytics — ABC Corporation
 ¿Qué factores explican que un empleado abandone la empresa?
 
 ---
