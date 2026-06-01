@@ -125,7 +125,7 @@ Las tasas globales ocultan la distribución real del riesgo. El análisis por se
 
 ## Limitaciones
 
-El dataset no incluye variable de fecha. Si los registros corresponden a períodos distintos, comparar la tasa global con un benchmark anual concreto sería metodológicamente incorrecto. Se asume que todos los registros pertenecen a un mismo período, pero no se puede verificar.
+Como el dataset no indica el año, podríamos compararlo con un benchmark incorrecto (p. ej., un dataset de 2023 con un benchmark de 2025). Sin embargo, al tratarse de un caso simulado, asumimos que el benchmark del sector tecnológico (~15%) corresponde al mismo periodo que el dataset.
 
 ---
 
